@@ -1,17 +1,16 @@
 #include "monty.h"
 
 /**
- * get_op_func - select the correct operation function asked by user
- * @s: operator argument
- 
- *
- * Return: function pointer corresponding to operator given
- *
-int (*get_op_func(char *s))(int)
-*/
-void (*get_op_func(char *s))(stack_t**, unsigned int)
+ * delegate_op - based on tokens from single line, decide what function to call
+ * @stack: double pointer to head of stack data structure
+ * @op: operator, aka token[0] from getline
+ * @line_number: line in byte-code file being processed, zero indexed
+ * Return: int for mysterious purposes
+ **/
+void delegate_op(stack_t **stack, char *op, unsigned int line_number)
 {
-	instruction_t ops[] = {
+	int i = 0;
+	instruction_t all_ops[] = {
 		{"push", op_push},
 		{"pall", op_pall},
 		{"pint", op_pint},
