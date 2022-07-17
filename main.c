@@ -1,58 +1,52 @@
 #include "monty.h"
-#define BUFSIZE 64
 
-char *operand;
+glob_t glob;
 
 /**
- * main - monty interpreter
- * @argc: int
- * @argv: list of arguments
- * Return: nothing
- */
-int main(int argc, char const *argv[])
+ * stack_init - initialize all the things
+ * @head: top of stack data structure
+ **/
+void stack_init(stack_t **head)
 {
-	line_t *lines;
-	char **line;
-	int line_number;
-	stack_t *stack;
-	char *content;
-	void (*func)(stack_t**, unsigned int);
+	*head = NULL;
+	glob.top = head;
+}
 
-	stack = NULL;
+/**
+ * free_all - free all malloc'ed memory
+ *     note: this is available "atexit", starting at
+ *           getline loop
+ **/
+void free_all(void)
+{
+	stack_t *tmp1, *tmp2 = NULL;
 
-	if (argc == 1)
+	tmp1 = *(glob.top);
+	/* printf("glob.top->%p\n",  (void*)glob.top); */
+	while (tmp1 != NULL)
 	{
-		fprintf(stderr, "USAGE: monty file\n");
+		tmp2 = tmp1->next;
+		free(tmp1);
+		tmp1 = tmp2;
+	}
+}
+
+/**
+ * main - monty bytecode interpreter
+ * @argc: number of command line arguments
+ * @argv: array of strings containing the comm line args
+ * Return: EXIT_SUCCESS or EXIT_FAILURE!!!
+ **/
+int main(int argc, char **argv)
+{
+	stack_t *head;
+
+	stack_init(&head);
+	if (argc != 2)
+	{
+		printf("USAGE: monty file\n");
 		exit(EXIT_FAILURE);
 	}
-	lines = textfile_to_array(argv[1]);
-	if (lines == NULL)
-		return (0);
-
-	line_number = 0;
-	while ((lines + line_number)->content != NULL)
-	{
-		content = (lines + line_number)->content;
-		line = split_line(content);
-		operand = line[1];
-
-		func = get_op_func(line[0]);
-		if (func == NULL)
-		{
-			/*TODO: Refactor: Edit more efifcient way to free memory on exit*/
-			fprintf(stderr, "L%d: unknown instruction %s\n", line_number + 1, line[0]);
-			free(line);
-			free_stack(stack);
-			free_lines(lines);
-			exit(EXIT_FAILURE);
-		}
-
-		func(&stack, line_number + 1);
-		free(line);
-		line_number++;
-	}
-
-	free_stack(stack);
-	free_lines(lines);
-	return (0);
+	process_file(argv[1], &head);
+	exit(EXIT_SUCCESS);
 }

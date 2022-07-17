@@ -4,30 +4,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
-#include <stdbool.h>
-#include <ctype.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <fcntl.h>
+#include <unistd.h>
+#include <errno.h>
+#include <limits.h>
+#include <ctype.h>
 
-/**monty errors defined*/
-#define MONTY_ERROR_NONE 0
-#define MONTY_ERROR_INVALID_OPCODE 1
-#define MONTY_ERROR_PUSH_MISSING_ARG 2
-#define MONTY_ERROR_PUSH_INVALID_ARG 3
-#define MONTY_ERROR_PINT_EMPTY 4
-#define MONTY_ERROR_POP_EMPTY 5
-
-
-typedef struct monty_s{
-  char  *save_ptr;
-  int line;
-  char *token;
-  int mode;
-  int error;
-}monty_t;
-
-extern char* operand;
-
+#define UNUSED(x) (void)(x)
+#define TRUE 1
+#define FALSE 0
+#define DELIMS "\n \t\r"
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
  * @n: integer
@@ -45,7 +33,7 @@ typedef struct stack_s
 } stack_t;
 
 /**
- * struct instruction_s - opcode and its function
+ * struct instruction_s - opcoode and its function
  * @opcode: the opcode
  * @f: function to handle the opcode
  *
@@ -59,19 +47,27 @@ typedef struct instruction_s
 } instruction_t;
 
 /**
- * struct line_s - line content and its number
- * @content: line content
- * @number: line number 
- *
- * Description: stores line of the monty source code
- */
-typedef struct line_s
+ * struct glob_s - globally useful variables, all rolled into one
+ * @top: double pointer to top of stack
+ * @ops: double pointer to an instruction struct
+**/
+typedef struct glob_s
 {
-	char *content;
-	int number;
-} line_t;
+	stack_t **top;
+	instruction_t **ops;
+} glob_t;
 
-line_t *textfile_to_array(const char *filename);
+extern glob_t glob;
+
+/* monty.c */
+void stack_init(stack_t **head);
+void free_all(void);
+
+/* helper1.c */
+int process_file(char *filename, stack_t **stack);
+
+/* helper2.c */
+void delegate_op(stack_t **stack, char *op, unsigned int line_number);
 
 /* function1.c */
 void op_push(stack_t **stack, unsigned int line_number);
@@ -94,11 +90,8 @@ void op_pstr(stack_t **stack, unsigned int line_number);
 void op_rotl(stack_t **stack, unsigned int line_number);
 void op_rotr(stack_t **stack, unsigned int line_number);
 
-char **split_line(char *line);
-void (*get_op_func(char *s))(stack_t**, unsigned int);
+/* _strtol.c */
+int is_leading_digit(char ascii_char);
+int _strtol(char *num_string, unsigned int line_number);
 
-void free_lines(line_t *head);
-void free_stack(stack_t *head);
-int _atoi(char *s, int* n);
-
-#endif
+#endif /* MONTY_H */

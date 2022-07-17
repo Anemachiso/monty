@@ -9,17 +9,13 @@
 void op_push(stack_t **stack, unsigned int line_number)
 {
 	stack_t *new;
-	int n;
+	char *op;
+	int num;
 
-	if (stack == NULL)
+	op = strtok(NULL, DELIMS);
+	if (op == NULL || stack == NULL)
 	{
-		fprintf(stderr, "L%u: stack not found\n", line_number);
-		exit(EXIT_FAILURE);
-	}
-
-	if (operand == NULL || _atoi(operand, &n) == -1)
-	{
-		fprintf(stderr, "L%u: usage: push integer\n", line_number);
+		printf("L%u: usage: push integer\n", line_number);
 		exit(EXIT_FAILURE);
 	}
 
@@ -28,13 +24,12 @@ void op_push(stack_t **stack, unsigned int line_number)
 	if (new == NULL)
 	{
 		fprintf(stderr, "Error: malloc failed\n");
-		free(*stack);
 		exit(EXIT_FAILURE);
 	}
-
+	num = _strtol(op, line_number);
 	new->next = *stack;
 	new->prev = NULL;
-	new->n = n;
+	new->n = num;
 
 	if (*stack)
 		(*stack)->prev = new;

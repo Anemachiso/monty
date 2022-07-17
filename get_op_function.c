@@ -29,9 +29,18 @@ void (*get_op_func(char *s))(stack_t**, unsigned int)
 		{"rotr", op_rotr},
 		{NULL, NULL}
 	};
-	int i = 0;
 
-	while (ops[i].opcode != NULL && strcmp((ops[i].opcode), s))
-		i++;
-	return (ops[i].f);
+	for (i = 0; all_ops[i].opcode; i++)
+	{
+		if (strcmp(op, all_ops[i].opcode) == 0)
+		{
+			all_ops[i].f(stack, line_number);
+			return;
+		}
+	}
+	if (strlen(op) != 0 && op[0] != '#')
+	{
+		printf("L%u: unknown instruction %s\n", line_number, op);
+		exit(EXIT_FAILURE);
+	}
 }
