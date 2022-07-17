@@ -9,7 +9,6 @@
 void op_push(stack_t **stack, unsigned int line_number)
 {
 	stack_t *new;
-	char *op;
 	int num;
 
 	if (stack == NULL)
@@ -17,7 +16,7 @@ void op_push(stack_t **stack, unsigned int line_number)
 		fprintf(stderr, "L%u: stack not found\n", line_number);
 		exit(EXIT_FAILURE);
 	}
-	op = strtok(NULL, DELIMS);
+
 	if (operand == NULL || _atoi(operand, &n) == -1)
 	{
 		fprintf(stderr, "L%u: usage: push integer\n", line_number);
@@ -32,10 +31,9 @@ void op_push(stack_t **stack, unsigned int line_number)
 		free(*stack);
 		exit(EXIT_FAILURE);
 	}
-	num = _strtol(op, line_number);
 	new->next = *stack;
 	new->prev = NULL;
-	new->n = num;
+	new->n = operand;
 
 	if (*stack)
 		(*stack)->prev = new;
