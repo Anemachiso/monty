@@ -8,22 +8,25 @@
  **/
 void op_mod(stack_t **stack, unsigned int line_number)
 {
-	int tmp;
+	stack_t *curerent = NULL;
+	int div = 0;
 
-	if (*stack == NULL || (*stack)->next == NULL)
+	if (!*stack || !(*stack)->next)
 	{
-		printf("L%u: can't mod, stack too short\n", line_number);
+		fprintf(stderr, "L%d: can't mod, stack too short\n", line_number);
+		cleanStack(stack);
 		exit(EXIT_FAILURE);
 	}
-
-	tmp = (*stack)->n;
-	if (tmp == 0)
+	else if ((*stack)->n == 0)
 	{
-		printf("L%u: division by zero\n", line_number);
+		fprintf(stderr, "L%d: division by zero\n", line_number);
+		cleanStack(stack);
 		exit(EXIT_FAILURE);
 	}
-	instruction_pop(stack, line_number);
-	(*stack)->n %= tmp;
+	curerent = *stack;
+	div = curerent->next->n % curerent->n;
+	curerent->next->n = div;
+	op_pop(stack, line_number);
 }
 
 /**
@@ -34,21 +37,24 @@ void op_mod(stack_t **stack, unsigned int line_number)
  **/
 void op_pchar(stack_t **stack, unsigned int line_number)
 {
-	int i;
+	int num = 0;
 
-	if (*stack == NULL)
+	if (!*stack || !stack)
 	{
-		printf("L%u: can't pchar, stack empty\n", line_number);
+		fprintf(stderr, "L%d: can't pchar, stack empty\n", line_number);
+		cleanStack(stack);
 		exit(EXIT_FAILURE);
 	}
-	i = (*stack)->n;
-	if (!(i >= 0 && i <= 127))
+
+	num = (*stack)->n;
+	if (num < 0 || num > 127)
 	{
-		printf("L%u: can't pchar, value out of range", line_number);
+		fprintf(stderr, "L%d: can't pchar, value out of range\n", line_number);
+		cleanStack(stack);
 		exit(EXIT_FAILURE);
 	}
-	putchar(i);
-	putchar('\n');
+	putchar(num);
+	putchar(10);
 }
 
 /**
@@ -58,23 +64,17 @@ void op_pchar(stack_t **stack, unsigned int line_number)
  **/
 void op_pstr(stack_t **stack, unsigned int line_number)
 {
-	stack_t *tmp = *stack;
+	stack_t *current = *stack;
+	(void)line_number;
 
-	UNUSED(line_number);
-	if (*stack == NULL)
+	while (current && current->n)
 	{
-		printf("\n");
-		return;
-	}
-	while (tmp != NULL)
-	{
-		if (isascii(tmp->n) && tmp->n != 0)
-			putchar(tmp->n);
-		else
+		if (current->n < 32 || current->n > 127)
 			break;
-		tmp = tmp->next;
+		printf("%c", current->n);
+		current = current->next;
 	}
-	putchar('\n');
+	putchar(10);
 }
 
 /**

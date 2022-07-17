@@ -8,17 +8,19 @@
  **/
 void op_add(stack_t **stack, unsigned int line_number)
 {
-	int tmp;
+	stack_t *current = NULL;
+	int sum = 0;
 
-	if (*stack == NULL || (*stack)->next == NULL)
+	if (!*stack || !(*stack)->next)
 	{
-		printf("L%u: can't add, stack too short\n", line_number);
+		fprintf(stderr, "L%d: can't add, stack too short\n", line_number);
+		cleanStack(stack);
 		exit(EXIT_FAILURE);
 	}
-
-	tmp = (*stack)->n;
+	current = *stack;
+	sum = current->n + current->next->n;
+	current->next->n = sum;
 	op_pop(stack, line_number);
-	(*stack)->n += tmp;
 }
 
 /**
@@ -29,6 +31,8 @@ void op_add(stack_t **stack, unsigned int line_number)
  **/
 void op_nop(stack_t **stack, unsigned int line_number)
 {
+	(void)stack;
+	(void)line_number;
 }
 
 /**
@@ -39,17 +43,18 @@ void op_nop(stack_t **stack, unsigned int line_number)
  **/
 void op_sub(stack_t **stack, unsigned int line_number)
 {
-	int tmp;
+	stack_t *current = *stack;
+	int sub = 0;
 
-	if (*stack == NULL || (*stack)->next == NULL)
+	if (!current || !current->next)
 	{
-		printf("L%u: can't sub, stack too short\n", line_number);
+		fprintf(stderr, "L%d: can't sub, stack too short\n", line_number);
+		cleanStack(stack);
 		exit(EXIT_FAILURE);
 	}
-
-	tmp = (*stack)->n;
+	sub = current->next->n - current->n;
+	current->next->n = sub;
 	op_pop(stack, line_number);
-	(*stack)->n -= tmp;
 }
 
 /**
@@ -60,21 +65,25 @@ void op_sub(stack_t **stack, unsigned int line_number)
  **/
 void op_div(stack_t **stack, unsigned int line_number)
 {
-	int tmp;
+	stack_t *curerent = NULL;
+	int div = 0;
 
-	if (*stack == NULL || (*stack)->next == NULL)
+	if (!*stack || !(*stack)->next)
 	{
-		printf("L%u: can't div, stack too short\n", line_number);
+		fprintf(stderr, "L%d: can't div, stack too short\n", line_number);
+		cleanStack(stack);
 		exit(EXIT_FAILURE);
 	}
-	tmp = (*stack)->n;
-	if (tmp == 0)
+	else if ((*stack)->n == 0)
 	{
-		printf("L%u: division by zero\n", line_number);
+		fprintf(stderr, "L%d: division by zero\n", line_number);
+		cleanStack(stack);
 		exit(EXIT_FAILURE);
 	}
+	curerent = *stack;
+	div = curerent->next->n / curerent->n;
+	curerent->next->n = div;
 	op_pop(stack, line_number);
-	(*stack)->n /= tmp;
 }
 
 /**
@@ -85,15 +94,18 @@ void op_div(stack_t **stack, unsigned int line_number)
  **/
 void op_mul(stack_t **stack, unsigned int line_number)
 {
-	int tmp;
+	stack_t *current = NULL;
+	int mul = 0;
 
-	if (*stack == NULL || (*stack)->next == NULL)
+	if (!*stack || !(*stack)->next)
 	{
-		printf("L%u: can't mul, stack too short\n", line_number);
+		fprintf(stderr, "L%d: can't mul, stack too short\n", line_number);
+		cleanStack(stack);
 		exit(EXIT_FAILURE);
 	}
+	current = *stack;
 
-	tmp = (*stack)->n;
+	mul = current->next->n * current->n;
 	op_pop(stack, line_number);
-	(*stack)->n *= tmp;
+	current->next->n = mul;
 }

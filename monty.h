@@ -9,13 +9,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <errno.h>
-#include <limits.h>
-#include <ctype.h>
 
-#define UNUSED(x) (void)(x)
-#define TRUE 1
-#define FALSE 0
-#define DELIMS "\n \t\r"
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
  * @n: integer
@@ -53,21 +47,16 @@ typedef struct instruction_s
 **/
 typedef struct glob_s
 {
-	stack_t **top;
-	instruction_t **ops;
+	FILE *fd;
+	char *line;
 } glob_t;
 
-extern glob_t glob;
+extern glob_t global;
+extern int value;
 
-/* monty.c */
-void stack_init(stack_t **head);
-void free_all(void);
+void handle_command(char *argv);
 
-/* helper1.c */
-int process_file(char *filename, stack_t **stack);
-
-/* helper2.c */
-void delegate_op(stack_t **stack, char *op, unsigned int line_number);
+int get_opc(stack_t **stack, char *arg, char *item, int count);
 
 /* function1.c */
 void op_push(stack_t **stack, unsigned int line_number);
@@ -90,8 +79,15 @@ void op_pstr(stack_t **stack, unsigned int line_number);
 void op_rotl(stack_t **stack, unsigned int line_number);
 void op_rotr(stack_t **stack, unsigned int line_number);
 
-/* _strtol.c */
-int is_leading_digit(char ascii_char);
-int _strtol(char *num_string, unsigned int line_number);
+void free_dlistint(stack_t *stack);
+void cleanStack(stack_t **stack);
+
+/* help */
+int _isdigit(char *c);
+stack_t *new_Node(int n);
+
+/* handle_errors */
+void push_error(FILE *fd, char *line, stack_t *stack, int count);
+void ins_error(FILE *fd, char *line, stack_t *stack, char *count, int item);
 
 #endif /* MONTY_H */

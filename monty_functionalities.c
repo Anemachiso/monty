@@ -1,5 +1,6 @@
 #include "monty.h"
 
+int value;
 /**
  * op_push - adds elements to a stack
  * @stack: pointer to the first node/element in a stack
@@ -8,30 +9,13 @@
  */
 void op_push(stack_t **stack, unsigned int line_number)
 {
-	stack_t *new;
-	char *op;
-	int num;
+	stack_t *new = NULL;
+	(void)line_number;
 
-	op = strtok(NULL, DELIMS);
-	if (op == NULL || stack == NULL)
-	{
-		printf("L%u: usage: push integer\n", line_number);
-		exit(EXIT_FAILURE);
-	}
+	new = new_Node(value);
 
-	new = malloc(sizeof(stack_t));
-
-	if (new == NULL)
-	{
-		fprintf(stderr, "Error: malloc failed\n");
-		exit(EXIT_FAILURE);
-	}
-	num = _strtol(op, line_number);
 	new->next = *stack;
-	new->prev = NULL;
-	new->n = num;
-
-	if (*stack)
+	if (*stack != NULL)
 		(*stack)->prev = new;
 	*stack = new;
 }
@@ -44,13 +28,15 @@ void op_push(stack_t **stack, unsigned int line_number)
  */
 void op_pall(stack_t **stack, unsigned int line_number)
 {
-	stack_t *temp = *stack;
+	stack_t *current = NULL;
+	(void)n;
 
-	UNUSED(line_number);
-	while (temp)
+	current = *stack;
+
+	while (current != NULL)
 	{
-		printf("%d\n", temp->n);
-		temp = temp->next;
+		dprintf(STDOUT_FILENO, "%d\n", current->n);
+		current = current->next;
 	}
 }
 
@@ -62,13 +48,14 @@ void op_pall(stack_t **stack, unsigned int line_number)
  */
 void op_pint(stack_t **stack, unsigned int line_number)
 {
-	if (stack == NULL || *stack == NULL)
+	if (!*stack || !stack)
 	{
-		fprintf(stderr, "L%u: can't pint, stack empty\n", line_number);
+		dprintf(STDERR_FILENO, "L%d: can't pint, stack empty\n", line_number);
+		cleanStack(stack);
 		exit(EXIT_FAILURE);
 	}
-
-	printf("%d\n", (*stack)->n);
+	else
+		dprintf(STDOUT_FILENO, "%d\n", (*stack)->n);
 }
 
 /**
@@ -79,16 +66,21 @@ void op_pint(stack_t **stack, unsigned int line_number)
  */
 void op_pop(stack_t **stack, unsigned int line_number)
 {
-	stack_t *node;
+	stack_t *current = NULL;
 
-	if (stack == NULL || *stack == NULL)
+	if (*stack == NULL || stack == NULL)
 	{
-		printf("L%u: can't pop an empty stack\n", line_number);
+		dprintf(STDERR_FILENO, "L%d: can't pop an empty stack\n", line_number);
+		cleanStack(stack);
 		exit(EXIT_FAILURE);
 	}
-	node  = *stack;
-	(*stack) = (*stack)->next;
-	free(node);
+
+	current = *stack;
+
+	*stack = current->next;
+	if (current->next != NULL)
+		current->next->prev = current->prev;
+	free(current);
 }
 
 /**
@@ -98,21 +90,16 @@ void op_pop(stack_t **stack, unsigned int line_number)
  */
 void op_swap(stack_t **stack, unsigned int line_number)
 {
-	stack_t *tmp;
+	stack_t *current = *stack;
+	int temp = 0;
 
-	UNUSED(line_number);
-	if (!(*stack) || !((*stack)->next))
+	if (!*stack || !(*stack)->next)
 	{
-		printf("L%u: can't swap, stack too short\n", line_number);
+		fprintf(stderr, "L%d: can't swap, stack too short\n", line_number);
+		cleanStack(stack);
 		exit(EXIT_FAILURE);
 	}
-	tmp = (*stack)->next;
-	(*stack)->prev = (*stack)->next;
-	(*stack)->next = tmp->next;
-	tmp->prev = NULL;
-	(*stack)->prev = tmp;
-	if (tmp->next)
-		tmp->next->prev = *stack;
-	tmp->next = *stack;
-	(*stack) = (*stack)->prev;
+	temp = current->n;
+	current->n = current->next->n;
+	current->next->n = temp;
 }
