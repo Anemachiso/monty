@@ -8,7 +8,7 @@
  **/
 void op_add(stack_t **stack, unsigned int line_number)
 {
-	int *tmp;
+	int tmp;
 
 	if (*stack == NULL || (*stack)->next == NULL)
 	{
@@ -17,7 +17,7 @@ void op_add(stack_t **stack, unsigned int line_number)
 	}
 
 	tmp = (*stack)->n;
-	instruction_pop(stack, line_number);
+	op_pop(stack, line_number);
 	(*stack)->n += tmp;
 }
 
@@ -29,8 +29,6 @@ void op_add(stack_t **stack, unsigned int line_number)
  **/
 void op_nop(stack_t **stack, unsigned int line_number)
 {
-	UNUSED(stack);
-	UNUSED(line_number);
 }
 
 /**
@@ -50,7 +48,7 @@ void op_sub(stack_t **stack, unsigned int line_number)
 	}
 
 	tmp = (*stack)->n;
-	instruction_pop(stack, line_number);
+	op_pop(stack, line_number);
 	(*stack)->n -= tmp;
 }
 
@@ -75,7 +73,7 @@ void op_div(stack_t **stack, unsigned int line_number)
 		printf("L%u: division by zero\n", line_number);
 		exit(EXIT_FAILURE);
 	}
-	instruction_pop(stack, line_number);
+	op_pop(stack, line_number);
 	(*stack)->n /= tmp;
 }
 
@@ -96,6 +94,6 @@ void op_mul(stack_t **stack, unsigned int line_number)
 	}
 
 	tmp = (*stack)->n;
-	instruction_pop(stack, line_number);
+	op_pop(stack, line_number);
 	(*stack)->n *= tmp;
 }
