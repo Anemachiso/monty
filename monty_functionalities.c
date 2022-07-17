@@ -9,7 +9,7 @@
 void op_push(stack_t **stack, unsigned int line_number)
 {
 	stack_t *new;
-	int num;
+	int n;
 
 	if (stack == NULL)
 	{
@@ -31,6 +31,7 @@ void op_push(stack_t **stack, unsigned int line_number)
 		free(*stack);
 		exit(EXIT_FAILURE);
 	}
+
 	new->next = *stack;
 	new->prev = NULL;
 	new->n = n;
