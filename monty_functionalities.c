@@ -33,7 +33,7 @@ void op_push(stack_t **stack, unsigned int line_number)
 	}
 	new->next = *stack;
 	new->prev = NULL;
-	new->n = operand;
+	new->n = n;
 
 	if (*stack)
 		(*stack)->prev = new;
