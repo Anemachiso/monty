@@ -6,9 +6,6 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdbool.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <limits.h>
 #include <ctype.h>
 #include <fcntl.h>
 
@@ -99,7 +96,6 @@ void op_rotr(stack_t **stack, unsigned int line_number);
 
 char **split_line(char *line);
 void (*get_op_func(char *s))(stack_t**, unsigned int);
-
 
 void free_lines(line_t *head);
 void free_stack(stack_t *head);
