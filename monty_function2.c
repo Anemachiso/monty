@@ -1,7 +1,7 @@
 #include "monty.h"
 
 /**
- * instruction_add - adds top 2 nodes of the stack
+ * op_add - adds top 2 nodes of the stack
  * @stack: double pointer to top of stack
  * @line_number: value of node
  * Return: nothing
@@ -22,7 +22,7 @@ void op_add(stack_t **stack, unsigned int line_number)
 }
 
 /**
- * instruction_nop - doesn't do anything
+ * op_nop - doesn't do anything
  * @stack: double pointer to top of stack
  * @line_number: value of node
  * Return: nothing
@@ -34,7 +34,7 @@ void op_nop(stack_t **stack, unsigned int line_number)
 }
 
 /**
- * instruction_sub - substracts top node from second top node
+ * op_sub - substracts top node from second top node
  * @stack: double pointer to top of stack
  * @line_number: value of node
  * Return: nothing
@@ -55,7 +55,7 @@ void op_sub(stack_t **stack, unsigned int line_number)
 }
 
 /**
- * instruction_div - divides second top node from top node
+ * op_div - divides second top node from top node
  * @stack: double pointer to top of stack
  * @line_number: value of node
  * Return: nothing
@@ -80,7 +80,7 @@ void op_div(stack_t **stack, unsigned int line_number)
 }
 
 /**
- * instruction_mul - multiplies second top node from top node
+ * op_mul - multiplies second top node from top node
  * @stack: double pointer to top of stack
  * @line_number: value of node
  * Return: nothing
