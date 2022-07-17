@@ -44,9 +44,9 @@ void op_push(stack_t **stack, unsigned int line_number)
  */
 void op_pall(stack_t **stack, unsigned int line_number)
 {
-	stack_t *temp;
-	(void)line_number;
-	temp = *stack;
+	stack_t *temp = *stack;
+
+	UNUSED(line_number);
 	while (temp)
 	{
 		printf("%d\n", temp->n);
@@ -62,16 +62,13 @@ void op_pall(stack_t **stack, unsigned int line_number)
  */
 void op_pint(stack_t **stack, unsigned int line_number)
 {
-	stack_t *temp;
-	(void)line_number;
 	if (stack == NULL || *stack == NULL)
 	{
 		fprintf(stderr, "L%u: can't pint, stack empty\n", line_number);
 		exit(EXIT_FAILURE);
 	}
 
-	temp = *stack;
-	printf("%d\n", temp->n);
+	printf("%d\n", (*stack)->n);
 }
 
 /**
@@ -103,7 +100,7 @@ void op_swap(stack_t **stack, unsigned int line_number)
 {
 	stack_t *tmp;
 
-	(void)(line_number);
+	UNUSED(line_number);
 	if (!(*stack) || !((*stack)->next))
 	{
 		printf("L%u: can't swap, stack too short\n", line_number);
