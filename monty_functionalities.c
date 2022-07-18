@@ -26,10 +26,10 @@ void op_push(stack_t **stack, unsigned int line_number)
  *@line_number: the line number
  *Return: void
  */
-void op_pall(stack_t **stack, unsigned int n)
+void op_pall(stack_t **stack, unsigned int line_number)
 {
 	stack_t *current = NULL;
-	(void)n;
+	(void)(line_number);
 
 	current = *stack;
 
