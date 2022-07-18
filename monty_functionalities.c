@@ -26,7 +26,7 @@ void op_push(stack_t **stack, unsigned int line_number)
  *@line_number: the line number
  *Return: void
  */
-void op_pall(stack_t **stack, unsigned int line_number)
+void op_pall(stack_t **stack, unsigned int n)
 {
 	stack_t *current = NULL;
 

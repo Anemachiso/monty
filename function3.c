@@ -86,7 +86,7 @@ void op_rotl(stack_t **stack, unsigned int line_number)
 {
 	stack_t *tmp = *stack, *new_top;
 
-	UNUSED(line_number);
+	(void)(line_number);
 	if (*stack == NULL || (*stack)->next == NULL)
 		return;
 	new_top = (*stack)->next;
@@ -108,7 +108,7 @@ void op_rotr(stack_t **stack, unsigned int line_number)
 {
 	stack_t *tmp = *stack;
 
-	UNUSED(line_number);
+	(void)(line_number);
 	if (*stack == NULL || (*stack)->next == NULL)
 		return;
 	while (tmp->next != NULL)
